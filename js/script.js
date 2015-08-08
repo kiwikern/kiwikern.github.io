@@ -3,47 +3,91 @@
  */
 
 
-//functions
-function addCatClickListener(catname) {
-    var catpic = $("#" + catname + "pic");
-    catpic.click(function () {
-        var catclicknumber = $("#" + catname + "number");
-        catclicknumber.text(parseInt(catclicknumber.text())+1);})
-}
+var model = {
+    init: function () {
+        this.catlist = {
+            Maria:      {name: "Maria",       file: "second_cat.jpg",                    clicks: 0},
+            Lucy:       {name: "Lucy",        file: "1280px-Neugierige-Katze.JPG",       clicks: 0},
+            Kedi:       {name: "Kedi",        file: "Kedi-dili.jpg",                     clicks: 0},
+            Gato:       {name: "Gato",        file: "Gato_común_latinoamericano.JPG",    clicks: 0},
+            Gingeria:   {name: "Gingeria",    file: "Ginger_Kitten_Face.JPG",            clicks: 0}
+        };
+        this.currentCat = Object.keys(this.catlist).pop();
+    },
+    setCurrentCatData: function (catname) {
+        this.currentCat = catname;
+    },
+    getCurrentCatData: function () {
+        return this.catlist[this.currentCat];
+    },
+    incrementCatCounter : function () {
+        this.catlist[this.currentCat].clicks+=1;
+    },
+    getCatList: function () {
+        return Object.keys(this.catlist);
+    }
+};
 
-function addNewCat(catname, filename) {
-    var newCatHTML = "<div id='" + catname + "' style='display:none'><p>Catclicks for " + catname + ": <span id='" + catname + "number'>0</span></p>" +
-        "<img id='" + catname + "pic' src='img/" + filename + "' width='400'></div>";
-    $("#cats").append(newCatHTML);
-}
+var controller = {
+    init : function () {
+        model.init();
+        catdetailview.init();
+        catlistview.init();
+    },
 
-function addCatListItem(catname) {
-    var catList = $("#catlist");
-    var newListItem = "<li id='" + catname + "list" + "'>" + catname + "</li>";
-    catList.append(newListItem);
-}
+    getCurrentCat: function () {
+      return model.getCurrentCatData();
+    },
 
-function addCatListItemClickListener(catname) {
-    var catListItem = $("#" + catname + "list");
-    catListItem.click(function() {
-       $("#cats > div").attr("style", "display:none");
-        $("#" + catname).attr("style", "display:inline")
-    });
-}
+    getCatList: function () {
+      return model.getCatList();
+    },
 
-//doStuff
-var catlist = [
-    {name: "Maria", file: "second_cat.jpg"},
-    {name: "Lucy", file: "1280px-Neugierige-Katze.JPG"},
-    {name: "Kedi", file: "Kedi-dili.jpg"},
-    {name: "Gato", file: "Gato_común_latinoamericano.JPG"},
-    {name: "Gingeria", file: "Ginger_Kitten_Face.JPG"}
-];
-for (f in catlist) {
-    var name = catlist[f].name;
-    var file = catlist[f].file;
-    addNewCat(name, file);
-    addCatClickListener(name);
-    addCatListItem(name);
-    addCatListItemClickListener(name);
-}
+    addCatImageClickListener: function (catImage) {
+        catImage.click(function () {
+            model.incrementCatCounter();
+            catdetailview.render();
+        });
+    },
+
+    addCatButtonClickListener: function (button, catName) {
+        button.click(function () {
+            model.setCurrentCatData(catName);
+            catdetailview.render();
+        })
+    }
+};
+
+var catdetailview = {
+    init: function () {
+        this.catdisplay = $("#cat_detaildisplay");
+        var catHTML = "<p>Catclicks for <span id='cat_name'></span>: <span id='cat_clicks'></span></p>" +
+            "<img id='cat_image' src='' width='400'>";
+        this.catdisplay.append(catHTML);
+        controller.addCatImageClickListener($("#cat_image"));
+        catdetailview.render();
+    },
+    render: function () {
+        var currentCat = controller.getCurrentCat();
+        $("#cat_name").text(currentCat.name);
+        $("#cat_clicks").text(currentCat.clicks);
+        $("#cat_image").attr("src", 'img/' + currentCat.file);
+    }
+};
+
+var catlistview = {
+    init: function () {
+        var cats = controller.getCatList();
+        var catHTML = [];
+        for (c in cats) {
+            var cat = cats[c];
+            var newButton = $("<button>" + cat + "</button>");
+            controller.addCatButtonClickListener(newButton, cat);
+            catHTML.push(newButton);
+        }
+        $("#cat_listview").append(catHTML);
+    }
+};
+
+
+controller.init();

@@ -8,9 +8,9 @@
     margin: 30px auto;
 }
 
-.right {
+.right-button {
     float: right;
-    margin: 0 2px;
+    margin: 10px 2px;
 }
 
 @media (max-width : 400px) {
@@ -21,4 +21,11 @@
         max-width: 100%;
         padding: 10px;
     }
+}
+
+.hr {
+    height: 0px;
+    margin: 0px;
+    border-bottom: 1px solid #ffffff;
+    font-size: 1px;
 }

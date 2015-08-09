@@ -2,27 +2,65 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Catclicker</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div align="center">
-    <h1>Catclicker</h1>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand disabled btn" href="#">Catclicker</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav" id="cat_listview"></ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a id="admin_button" href="#"><span class="glyphicon glyphicon-edit"></span> Admin</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class=".container" align="center">
+    <p>Click on your favourite cat to increase their Catclicks!</p>
+</div>
+<div class=".container" id="cat_detaildisplay" align="center">
+</div>
+<div class=".container admin-form">
+    <form class="form-horizontal" id="admin_section" style="display: none" role="form">
+        <div class="form-group">
+            <label for="admin_name" class="col-sm-2 control-label">Name</label>
 
-    <p>Click on the cat to increase your Catclicks!</p>
-<div id="cat_listview">
-</div>
-<div id="cat_detaildisplay">
-</div>
-    <button id="admin_button">Admin</button><button id="localstorage_reset" onclick="localStorage.clear();location.reload();">Reset</button>
-    <form id="admin_section" style="display: none">
-        <table>
-            <tr><td class="right"><label>Name</label></td><td><input id="admin_name"></td></tr>
-            <tr><td class="right"><label>Image</label></td><td><input id="admin_url"></td></tr>
-            <tr><td class="right"><label>Clicks</label></td><td><input id="admin_clicks"></td></tr>
-            <tr><td/><td class="right"><button id="admin_cancel" type="button">Cancel</button><button id="admin_save" type="button">Save</button></td></tr>
-        </table>
+            <div class="col-sm-10">
+                <input class="form-control" id="admin_name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="admin_url" class="col-sm-2 control-label">Image</label>
+
+            <div class="col-sm-10">
+                <input class="form-control" id="admin_url">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="admin_clicks" class="col-sm-2 control-label">Clicks</label>
+
+            <div class="col-sm-10">
+                <input class="form-control" id="admin_clicks">
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn" id="localstorage_reset"><span class="glyphicon glyphicon-trash"></span> Reset Data</button>
+        </div>
+        <button class="btn btn-default right" id="admin_save" type="button"><span class="glyphicon glyphicon-ok"></span> Save</button>
+        <button class="btn right" id="admin_cancel" type="button"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
     </form>
 </div>
 <script src="js/script.js"></script>

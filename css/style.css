@@ -1,14 +1,14 @@
-#cat_listview > button {
-    margin-left: 7px;
-    margin-right: 7px;
+.admin-form {
+    width: 400px;
+    margin: 0 auto;
 }
 
-button {
-    margin : 3px;
+#cat_image {
+    width: 400px;
+    margin: 30px auto;
 }
-
 
 .right {
-  float: right  ;
+    float: right;
+    margin: 0 2px;
 }
-

@@ -5,25 +5,26 @@
 
 var model = {
     init: function () {
-        if (!localStorage["catlist"]) {
+        if (!(localStorage["catlist"] && localStorage["currentCat"])) {
             this.catlist = [
-                {name: "Maria",         file: "second_cat.jpg",                    clicks: 0},
-                {name: "Lucy",          file: "1280px-Neugierige-Katze.JPG",       clicks: 0},
-                {name: "Kedi",          file: "Kedi-dili.jpg",                     clicks: 0},
-                {name: "Gato",          file: "Gato_común_latinoamericano.JPG",    clicks: 0},
-                {name: "Marcy",         file: "laptop_cat.jpg",                    clicks: 0},
-                {name: "Pluto",         file: "screaming_kitten.jpg",              clicks: 0},
-                {name: "Paul and Lisa", file: "twocats.jpg",                       clicks: 0},
-                {name: "Gingeria",      file: "Ginger_Kitten_Face.JPG",            clicks: 0}
+                {name: "Maria",         file: "img/second_cat.jpg",                    clicks: 0},
+                {name: "Lucy",          file: "img/1280px-Neugierige-Katze.JPG",       clicks: 0},
+                {name: "Kedi",          file: "img/Kedi-dili.jpg",                     clicks: 0},
+                {name: "Gato",          file: "img/Gato_común_latinoamericano.JPG",    clicks: 0},
+                {name: "Marcy",         file: "img/laptop_cat.jpg",                    clicks: 0},
+                {name: "Pluto",         file: "img/screaming_kitten.jpg",              clicks: 0},
+                {name: "Paul and Lisa", file: "img/twocats.jpg",                       clicks: 0},
+                {name: "Gingeria",      file: "img/Ginger_Kitten_Face.JPG",            clicks: 0}
             ];
+            this.currentCat = 0;
         } else {
-            this.catlist = JSON.parse(localStorage.getItem("catlist"));
+            model.readCatsFromLocalStorage();
         }
-        this.currentCat = 0;
         this.adminMode = false;
     },
     setCurrentCatData: function (catnumber) {
         this.currentCat = catnumber;
+        model.saveCatsToLocalStorage();
     },
     getCurrentCatData: function () {
         return this.catlist[this.currentCat];
@@ -50,6 +51,11 @@ var model = {
     },
     saveCatsToLocalStorage: function () {
         localStorage.setItem("catlist", JSON.stringify(this.catlist));
+        localStorage.setItem("currentCat", JSON.stringify(this.currentCat));
+    },
+    readCatsFromLocalStorage: function() {
+        this.catlist = JSON.parse(localStorage.getItem("catlist"));
+        this.currentCat = JSON.parse(localStorage.getItem("currentCat"));
     }
 };
 
@@ -63,6 +69,10 @@ var controller = {
 
     getCurrentCat: function () {
       return model.getCurrentCatData();
+    },
+
+    getCurrentCatNumber: function () {
+        return model.currentCat;
     },
 
     getCatList: function () {
@@ -82,6 +92,7 @@ var controller = {
             model.setCurrentCatData(catName);
             catdetailview.render();
             adminview.render();
+            catlistview.render();
         })
     },
 
@@ -114,6 +125,22 @@ var controller = {
 
     getAdminMode: function () {
         return model.adminMode;
+    },
+
+    addResetLocalStorageClickListener: function (resetButton) {
+        resetButton.click(function () {
+            localStorage.clear();
+            location.reload();
+        })
+    },
+    removeInputEnterListener: function () {
+        $('.admin-form').find('input').keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                adminview.saveButton.trigger('click');
+                return false;
+            }
+        });
     }
  };
 
@@ -133,7 +160,7 @@ var catdetailview = {
         var currentCat = controller.getCurrentCat();
         this.catName.text(currentCat.name);
         this.catClicks.text(currentCat.clicks);
-        this.catImage.attr("src", 'img/' + currentCat.file);
+        this.catImage.attr("src", currentCat.file);
     }
 };
 
@@ -143,7 +170,7 @@ var catlistview = {
         var catHTML = [];
         for (c in cats) {
             var catName = cats[c].name;
-            var newButton = $("<button id='" + c + "'></button>");
+            var newButton = $("<li><a href='#' id='" + c + "'></a></li>");
             controller.addCatButtonClickListener(newButton, c);
             catHTML.push(newButton);
         }
@@ -153,9 +180,15 @@ var catlistview = {
     render: function () {
         var cats = controller.getCatList();
         for (c in cats) {
-            var button = $("#" + c);
-            button.text(cats[c].name);
+            var link = $("#" + c);
+            link.text(cats[c].name);
+            link.parent().attr("class", "");
         }
+        this.setActiveCatLink();
+    },
+    setActiveCatLink: function() {
+        var currentCatNumber = controller.getCurrentCatNumber();
+        $("#"+currentCatNumber).parent().attr("class", "active");
     }
 };
 
@@ -165,12 +198,15 @@ var adminview = {
         this.adminSection = $("#admin_section");
         this.cancelButton = $("#admin_cancel");
         this.saveButton = $("#admin_save");
+        this.resetButton = $("#localstorage_reset");
         this.catNameInput = $("#admin_name");
         this.catURLInput = $("#admin_url");
         this.catClickInput = $("#admin_clicks");
         controller.addAdminButtonClickListener(this.adminButton);
         controller.addCancelButtonClickListener(this.cancelButton);
         controller.addSaveButtonClickListener(this.saveButton);
+        controller.addResetLocalStorageClickListener(this.resetButton);
+        controller.removeInputEnterListener();
         adminview.render();
     },
     render: function () {

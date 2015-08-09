@@ -73,6 +73,7 @@ var controller = {
         catImage.click(function () {
             model.incrementCatCounter();
             catdetailview.render();
+            adminview.render();
         });
     },
 
@@ -80,6 +81,7 @@ var controller = {
         button.click(function () {
             model.setCurrentCatData(catName);
             catdetailview.render();
+            adminview.render();
         })
     },
 

@@ -175,6 +175,7 @@ var catlistview = {
             catHTML.push(newButton);
         }
         $("#cat_listview").append(catHTML);
+        catlistview.closeMenuWhenItemSelected();
         catlistview.render();
     },
     render: function () {
@@ -189,6 +190,11 @@ var catlistview = {
     setActiveCatLink: function() {
         var currentCatNumber = controller.getCurrentCatNumber();
         $("#"+currentCatNumber).parent().attr("class", "active");
+    },
+    closeMenuWhenItemSelected: function() {
+        $(".navbar-nav li a").click(function(event) {
+            $(".navbar-collapse").collapse('hide');
+        });
     }
 };
 

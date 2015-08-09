@@ -12,3 +12,13 @@
     float: right;
     margin: 0 2px;
 }
+
+@media (max-width : 400px) {
+    #cat_image {
+        max-width: 100%;
+    }
+    .admin-form {
+        max-width: 100%;
+        padding: 10px;
+    }
+}

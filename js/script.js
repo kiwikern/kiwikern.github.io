@@ -151,7 +151,7 @@ var catdetailview = {
         var catHTML = "<h4>Catclicks for <span id='cat_name'></span>: <span id='cat_clicks'></span></h4>" +
             "<img id='cat_image' src='' width='400' data-toggle='popover' data-trigger='manual'" +
             "data-placement='top' title='Howto'" +
-            "data-content='Click on your favourite cat to increase their Catclicks!'>";
+            "data-content='Click on your favourite cat to increase its Catclicks!'>";
         this.catdisplay.append(catHTML);
         this.catName = $("#cat_name");
         this.catClicks = $("#cat_clicks");

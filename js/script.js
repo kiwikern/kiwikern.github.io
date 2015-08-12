@@ -16,7 +16,7 @@ var model = {
                 {name: "Paul and Lisa", file: "img/twocats.jpg",                       clicks: 0},
                 {name: "Gingeria",      file: "img/Ginger_Kitten_Face.JPG",            clicks: 0}
             ];
-            this.currentCat = 0;
+            this.currentCat = 2;
         } else {
             model.readCatsFromLocalStorage();
         }
@@ -84,6 +84,7 @@ var controller = {
             model.incrementCatCounter();
             catdetailview.render();
             adminview.render();
+            catdetailview.catImage.popover('destroy');
         });
     },
 
@@ -141,20 +142,25 @@ var controller = {
                 return false;
             }
         });
-    }
+    },
  };
 
 var catdetailview = {
     init: function () {
         this.catdisplay = $("#cat_detaildisplay");
-        var catHTML = "<p>Catclicks for <span id='cat_name'></span>: <span id='cat_clicks'></span></p>" +
-            "<img id='cat_image' src='' width='400'>";
+        var catHTML = "<h4>Catclicks for <span id='cat_name'></span>: <span id='cat_clicks'></span></h4>" +
+            "<img id='cat_image' src='' width='400' data-toggle='popover' data-trigger='manual'" +
+            "data-placement='top' title='Howto'" +
+            "data-content='Click on your favourite cat to increase their Catclicks!'>";
         this.catdisplay.append(catHTML);
         this.catName = $("#cat_name");
         this.catClicks = $("#cat_clicks");
         this.catImage = $("#cat_image");
         controller.addCatImageClickListener(this.catImage);
         catdetailview.render();
+        setTimeout(function(){
+            if (adminview.adminSection.is(":hidden")) catdetailview.catImage.popover('show');
+        }, 3000);
     },
     render: function () {
         var currentCat = controller.getCurrentCat();
@@ -217,13 +223,15 @@ var adminview = {
     },
     render: function () {
         if (controller.getAdminMode()) {
-            this.adminSection.attr("style", "display:inline");
+            this.adminSection.show();
             var currentCat = controller.getCurrentCat();
             this.catNameInput.prop("value", currentCat.name);
             this.catURLInput.prop("value", currentCat.file);
             this.catClickInput.prop("value", currentCat.clicks);
+            catdetailview.catdisplay.hide()
         } else {
-            $(this.adminSection).attr("style", "display:none")
+            $(this.adminSection).hide();
+            catdetailview.catdisplay.show();
         }
     }
 };

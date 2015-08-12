@@ -5,7 +5,7 @@
 
 #cat_image {
     width: 400px;
-    margin: 30px auto;
+    margin: 15px auto;
 }
 
 .right-button {
@@ -21,11 +21,4 @@
         max-width: 100%;
         padding: 10px;
     }
-}
-
-.hr {
-    height: 0px;
-    margin: 0px;
-    border-bottom: 1px solid #ffffff;
-    font-size: 1px;
 }

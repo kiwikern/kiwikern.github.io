@@ -7,14 +7,14 @@ var model = {
     init: function () {
         if (!(localStorage["catlist"] && localStorage["currentCat"])) {
             this.catlist = [
-                {name: "Maria",         file: "img/second_cat.jpg",                    clicks: 0},
-                {name: "Lucy",          file: "img/1280px-Neugierige-Katze.JPG",       clicks: 0},
-                {name: "Kedi",          file: "img/Kedi-dili.jpg",                     clicks: 0},
-                {name: "Gato",          file: "img/Gato_común_latinoamericano.JPG",    clicks: 0},
-                {name: "Marcy",         file: "img/laptop_cat.jpg",                    clicks: 0},
-                {name: "Pluto",         file: "img/screaming_kitten.jpg",              clicks: 0},
-                {name: "Paul and Lisa", file: "img/twocats.jpg",                       clicks: 0},
-                {name: "Gingeria",      file: "img/Ginger_Kitten_Face.JPG",            clicks: 0}
+                {name: "Maria", file: "img/second_cat.jpg", clicks: 0},
+                {name: "Lucy", file: "img/1280px-Neugierige-Katze.JPG", clicks: 0},
+                {name: "Kedi", file: "img/Kedi-dili.jpg", clicks: 0},
+                {name: "Gato", file: "img/Gato_común_latinoamericano.JPG", clicks: 0},
+                {name: "Marcy", file: "img/laptop_cat.jpg", clicks: 0},
+                {name: "Pluto", file: "img/screaming_kitten.jpg", clicks: 0},
+                {name: "Paul and Lisa", file: "img/twocats.jpg", clicks: 0},
+                {name: "Gingeria", file: "img/Ginger_Kitten_Face.JPG", clicks: 0}
             ];
             this.currentCat = 2;
         } else {
@@ -29,8 +29,8 @@ var model = {
     getCurrentCatData: function () {
         return this.catlist[this.currentCat];
     },
-    incrementCatCounter : function () {
-        this.catlist[this.currentCat].clicks+=1;
+    incrementCatCounter: function () {
+        this.catlist[this.currentCat].clicks += 1;
         model.saveCatsToLocalStorage();
     },
     getCatList: function () {
@@ -39,28 +39,28 @@ var model = {
     enableAdminMode: function () {
         this.adminMode = true;
     },
-    disableAdminMode: function() {
+    disableAdminMode: function () {
         this.adminMode = false;
     },
-    setCurrentCatProperties: function(name, url, clicks) {
+    setCurrentCatProperties: function (name, url, clicks) {
         var currentCat = this.catlist[this.currentCat];
-           currentCat["name"]=name;
-           currentCat["file"]=url;
-           currentCat["clicks"]=clicks;
+        currentCat["name"] = name;
+        currentCat["file"] = url;
+        currentCat["clicks"] = clicks;
         model.saveCatsToLocalStorage();
     },
     saveCatsToLocalStorage: function () {
         localStorage.setItem("catlist", JSON.stringify(this.catlist));
         localStorage.setItem("currentCat", JSON.stringify(this.currentCat));
     },
-    readCatsFromLocalStorage: function() {
+    readCatsFromLocalStorage: function () {
         this.catlist = JSON.parse(localStorage.getItem("catlist"));
         this.currentCat = JSON.parse(localStorage.getItem("currentCat"));
     }
 };
 
 var controller = {
-    init : function () {
+    init: function () {
         model.init();
         catdetailview.init();
         catlistview.init();
@@ -68,7 +68,7 @@ var controller = {
     },
 
     getCurrentCat: function () {
-      return model.getCurrentCatData();
+        return model.getCurrentCatData();
     },
 
     getCurrentCatNumber: function () {
@@ -76,7 +76,7 @@ var controller = {
     },
 
     getCatList: function () {
-      return model.getCatList();
+        return model.getCatList();
     },
 
     addCatImageClickListener: function (catImage) {
@@ -112,7 +112,7 @@ var controller = {
     },
 
     addSaveButtonClickListener: function (saveButton) {
-        saveButton.click( function () {
+        saveButton.click(function () {
             var catName = adminview.catNameInput.prop("value");
             var catURL = adminview.catURLInput.prop("value");
             var catClicks = parseInt(adminview.catClickInput.prop("value"));
@@ -135,15 +135,15 @@ var controller = {
         })
     },
     removeInputEnterListener: function () {
-        $('.admin-form').find('input').keydown(function(event){
-            if(event.keyCode == 13) {
+        $('.admin-form').find('input').keydown(function (event) {
+            if (event.keyCode == 13) {
                 event.preventDefault();
                 adminview.saveButton.trigger('click');
                 return false;
             }
         });
     },
- };
+};
 
 var catdetailview = {
     init: function () {
@@ -158,15 +158,24 @@ var catdetailview = {
         this.catImage = $("#cat_image");
         controller.addCatImageClickListener(this.catImage);
         catdetailview.render();
-        setTimeout(function(){
-            if (adminview.adminSection.is(":hidden")) catdetailview.catImage.popover('show');
-        }, 3000);
+        catdetailview.showHowtoPopover();
     },
     render: function () {
         var currentCat = controller.getCurrentCat();
         this.catName.text(currentCat.name);
         this.catClicks.text(currentCat.clicks);
         this.catImage.attr("src", currentCat.file);
+    },
+    showHowtoPopover : function () {
+        var navbar = $("#navbar");
+        navbar.on('shown.bs.collapse', function () {
+            catdetailview.catImage.popover('destroy');
+        });
+        setTimeout(function () {
+            if (adminview.adminSection.is(":hidden") && !(navbar.attr('aria-expanded')=='true')) {
+                catdetailview.catImage.popover('show');
+            }
+        }, 3000);
     }
 };
 
@@ -193,12 +202,12 @@ var catlistview = {
         }
         this.setActiveCatLink();
     },
-    setActiveCatLink: function() {
+    setActiveCatLink: function () {
         var currentCatNumber = controller.getCurrentCatNumber();
-        $("#"+currentCatNumber).parent().attr("class", "active");
+        $("#" + currentCatNumber).parent().attr("class", "active");
     },
-    closeMenuWhenItemSelected: function() {
-        $(".navbar-nav li a").click(function(event) {
+    closeMenuWhenItemSelected: function () {
+        $(".navbar-nav li a").click(function (event) {
             $(".navbar-collapse").collapse('hide');
         });
     }

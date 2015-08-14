@@ -99,7 +99,8 @@ var controller = {
 
     addAdminButtonClickListener: function (adminButton) {
         adminButton.click(function () {
-            model.enableAdminMode();
+            if (!model.adminMode) model.enableAdminMode();
+            else model.disableAdminMode();
             adminview.render();
         });
     },
